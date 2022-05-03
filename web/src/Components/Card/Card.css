@@ -1,0 +1,79 @@
+.nft-card {
+  margin-top: 5px;
+  color: black;
+  width: 180px;
+  height: 290px;
+  font-size: 12px;
+  flex: 0 0 auto; /* ADD */
+  display: inline-block; /* ADD */
+  flex-direction: column; /* ADD */
+  position: relative;
+  background-color: antiquewhite;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 5px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.nft-card > img {
+  max-width: 90%;
+  height: 50%;
+  border-radius: 10px;
+}
+
+.attackButton {
+  background: #082242;
+  border-radius: 999px;
+  box-shadow: #5e5df0 0 10px 20px -10px;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  opacity: 1;
+  outline: 0 solid transparent;
+  padding: 8px 18px;
+  width: fit-content;
+  word-break: break-word;
+  border: 0;
+}
+.attackButton:active {
+    vertical-align: top;
+    padding: 8px 13px 6px;
+}
+
+/* KeyFrames */
+@-webkit-keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  @-moz-keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  @keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }

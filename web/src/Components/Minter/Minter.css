@@ -1,0 +1,29 @@
+.mint--container {
+    margin-top: 5px;
+}
+
+.mint--form {
+    padding-bottom: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.mint--form--input1 {
+    margin-bottom: 1px;
+}
+.mint--form > input {  
+    border-radius: 5px;
+    border: 1px solid gray;
+    padding: 5px;
+    font-family: 'Inter', sans-serif;
+}
+.mint--button {
+    margin-bottom: 10px;
+    background: -webkit-linear-gradient(left, #a200d6, #ff6fdf);
+    background-size: 200% 200%;
+    border: 1px solid gray;
+    border-radius: 5px;
+    animation: gradient-animation 4s ease infinite;
+    margin-right: 15px;
+    cursor: pointer;
+  }

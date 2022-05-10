@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import "./App.css";
 import twitterLogo from "./assets/twitter-logo.svg";
-import SelectCharacter from "./Components/SelectCharacter";
 import Minter from "./Components/Minter/Minter";
-import { NFTCard } from "./Components/Card/Card";
-import { PVEARENA_ADDRESS, transformCharacterData } from "./constants";
+import { NFTCard, EnemyCard } from "./Components/Card/Card";
+import Fight from "./Components/Fight/Fight";
+import {
+  PVEARENA_ADDRESS,
+  SECS_MS,
+  transformCharacterData,
+  transformEnemyData
+} from "./constants";
 import pveArena from "./utils/PVEArena.json";
 
 // Constants
@@ -16,10 +21,19 @@ const App = () => {
   // State
   const [currentAccount, setCurrentAccount] = useState(null);
   const [characterNFTs, setCharacterNFTs] = useState([]);
+  const [enemies, setEnemies] = useState([]);
+  const [selectedNFT, setSelectedNFT] = useState();
+  const [isFighting, setIsFighting] = useState(false);
+  const [isFightingAux, setIsFightingAux] = useState(false); //For periodical result check
+  const [canResolveFight, setCanResolveFight] = useState(false);
 
   function addCharacterNFT(newNFT) {
     setCharacterNFTs((prevState) => [...prevState, newNFT]);
     console.log("Added to state: ", newNFT);
+  }
+
+  function modifySelectedNFT(id) {
+    setSelectedNFT(id);
   }
 
   // Actions
@@ -46,6 +60,61 @@ const App = () => {
     }
   };
 
+  const fetchEnemyData = async () => {
+    console.log("Fetching enemy data");
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const gameContract = new ethers.Contract(
+      PVEARENA_ADDRESS,
+      pveArena.abi,
+      signer
+    );
+    const existingEnemies = await gameContract.getExistingEnemiesIds();
+    console.log(`Existing enemies ids: ${existingEnemies}`);
+
+    // Fetch all existing enemies' data
+    const allInfo = existingEnemies.map((_, i) => gameContract.getEnemyInfo(i));
+    const res = await Promise.all(allInfo);
+    setEnemies(res.map((data) => transformEnemyData(data)));
+  };
+
+  const startFight = async (enemyId) => {
+    if (selectedNFT >= 0) {
+      console.log(
+        `NFT with id ${selectedNFT} is attacking enemy number ${enemyId}!`
+      );
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const gameContract = new ethers.Contract(
+        PVEARENA_ADDRESS,
+        pveArena.abi,
+        signer
+      );
+      console.log("Please mount");
+      <Fight
+        gameContract={gameContract}
+        monId={selectedNFT}
+        enemyId={enemyId}
+      />
+      setIsFighting(true);
+    } else {
+      alert("Select an NFT!");
+    }
+  };
+
+  // const checkResult = async () => {
+  //   const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //   const signer = provider.getSigner();
+  //   const gameContract = new ethers.Contract(
+  //     PVEARENA_ADDRESS,
+  //     pveArena.abi,
+  //     signer
+  //   );
+  //   let txn = await gameContract.getResult();
+  //   let value = txn._hex
+  //   return value;
+  // }
+
   // Render Methods
   const renderContent = () => {
     /*
@@ -69,20 +138,38 @@ const App = () => {
       /*
        * Scenario #2
        */
-    } else if (currentAccount && !characterNFTs) {
-      return <SelectCharacter setCharacterNFT={setCharacterNFTs} />;
     } else if (currentAccount && characterNFTs) {
-      console.log("Number of NFTs detected:", characterNFTs.length);
-
       return (
         <div>
+          <section className="enemies-list">
+            {enemies &&
+              enemies.map((enemy, index) => {
+                //console.log(`Mapping on enemy number ${index}`);
+                return (
+                  <EnemyCard
+                    key={index}
+                    index={index}
+                    name={enemy.name}
+                    chance={enemy.chance}
+                    imageURI={enemy.imageURI}
+                    numberOfEnemies={enemies.length}
+                    attackFunction={startFight}
+                    canAttack={selectedNFT >= 0}
+                  />
+                );
+              })}
+          </section>
+
           <section className="nfts-list">
             {characterNFTs &&
               characterNFTs.map((mon, index) => {
-                console.log(`Mapping on NFT number ${index}`);
+                //console.log(`Mapping on NFT number ${index}`);
                 return (
                   <NFTCard
+                    selectedNFT={selectedNFT}
+                    selectedNftUpdater={modifySelectedNFT}
                     key={index}
+                    id={index}
                     name={mon.name}
                     level={mon.level}
                     exp={mon.exp}
@@ -107,14 +194,14 @@ const App = () => {
       }
 
       /*
-       * Fancy method to request access to account.
+       * Request access to account.
        */
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
 
       /*
-       * Boom! This should print out public address once we authorize Metamask.
+       * Print out public address once we authorize Metamask.
        */
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]);
@@ -123,17 +210,40 @@ const App = () => {
     }
   };
 
+  /* Initial check for wallet connection */
   useEffect(() => {
     checkIfWalletIsConnected();
+    fetchEnemyData();
   }, []);
 
+  // /* If user is fighting, check every second for changes on the result */
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const periodCheck = async () => {
+  //       if (isFightingAux) {
+  //         let valueHex = await checkResult();
+  //         let value = parseInt(valueHex, 16);
+  //         console.log("Current result:", value);
+  //         if (value>0 && value<2500) {
+  //           console.log(`Result is ${value}. Activating resolve button`);
+  //           setCanResolveFight(true);
+  //           setIsFighting(false);
+  //         }
+  //       } 
+  //     }
+  //   periodCheck();
+  //   }, SECS_MS);
+
+  //   return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+  // }, []);
+
+  /* Initial useEffect for NFT data gathering*/
   useEffect(() => {
     /*
      * The function we will call that interacts with our smart contract
      */
     const fetchNFTMetadata = async () => {
-      console.log("Checking for Character NFT on address:", currentAccount);
-      console.log("Current contract address: ", PVEARENA_ADDRESS);
+      console.log("Fetching NFT data");
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -143,18 +253,16 @@ const App = () => {
         signer
       );
       const monsOwned = await gameContract.getOwnedMons();
-      console.log(`Mons owned: ${monsOwned}`);
-      
+
       // Fetch all initially owned NFTs data
-      const allInfo = monsOwned.map((_,i)=>gameContract.getMonInfo(i));
+      const allInfo = monsOwned.map((_, i) => gameContract.getMonInfo(i));
       const res = await Promise.all(allInfo);
-      setCharacterNFTs(res.map(data=>transformCharacterData(data)))
+      setCharacterNFTs(res.map((data) => transformCharacterData(data)));
     };
     /*
      * We only want to run this if we have a connected wallet
      */
     if (currentAccount) {
-      console.log("Running fetchNFTMetadata");
       fetchNFTMetadata();
     }
   }, [currentAccount]);
@@ -167,7 +275,6 @@ const App = () => {
           <p className="sub-text">Go catch em on!</p>
         </div>
         <div className="connect-wallet-container">{renderContent()}</div>
-        {characterNFTs[0] && (
           <div className="footer-container">
             <img
               alt="Twitter Logo"
@@ -181,7 +288,6 @@ const App = () => {
               rel="noreferrer"
             >{`built with @${TWITTER_HANDLE}`}</a>
           </div>
-        )}
       </div>
     </div>
   );

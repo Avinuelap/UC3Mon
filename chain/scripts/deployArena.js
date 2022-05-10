@@ -6,18 +6,23 @@ const main = async () => {
   await pveArenaContract.deployed();
   console.log("Contract deployed to:", pveArenaContract.address);
 
-  // Mint UC3Mon NFT
-  console.log("*****************************");
-  console.log("Minting NFT Vini Junior");
-  txn = await pveArenaContract.createUC3Mon("Vini Junior", "QmUGAgB5y3QqiHQEDMX6DCwcsemb896LsuYBxmQ4qbQrjq");
-  await txn.wait();
+  // // Mint UC3Mon NFT
+  // console.log("*****************************");
+  // console.log("Minting NFT Vini Junior");
+  // txn = await pveArenaContract.createUC3Mon("Vini Junior", "QmUGAgB5y3QqiHQEDMX6DCwcsemb896LsuYBxmQ4qbQrjq");
+  // await txn.wait();
 
-  // Get the value of the NFT's URI.
-  let returnedTokenUri = await pveArenaContract.tokenURI(0);
-  console.log("Token URI:", returnedTokenUri);
+  // // Get the value of the NFT's URI.
+  // let returnedTokenUri = await pveArenaContract.tokenURI(0);
+  // console.log("Token URI:", returnedTokenUri);
 
   console.log("Creating enemy Kayn");
   txn = await pveArenaContract.createEnemy("Kayn", "QmNyMSVmEWpVUhcdAVHguE7PaJSJZ7ATWL99wKjNGBFL5S", 30);
+  await txn.wait();
+  console.log("Created")
+
+  console.log("Importing token")
+  txn = await pveArenaContract.createUC3MToken("0x0F42271B3B7cA8695e803cfA3b572d129287A86e");
   await txn.wait();
 
   // existingEnemies = await pveArenaContract.getExistingEnemiesIds();

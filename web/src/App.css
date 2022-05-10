@@ -86,21 +86,24 @@
   padding-bottom: 10px;
 }
 
-.opensea-button {
-  background-color: rgb(32, 129, 226);
-}
-
-.mint-count {
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
+.enemies-list {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  overflow-x: auto;
+  margin: 0 auto;
+  max-width: 100%;
+  width: fit-content;
+  height: auto;
+  flex-wrap: nowrap;
+  padding-bottom: 10px;
 }
 
 .footer-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-bottom: 30px;
+  padding-bottom: 2px;
 }
 
 .twitter-logo {
@@ -110,41 +113,6 @@
 
 .footer-text {
   color: white;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
-}
-
-/* KeyFrames */
-@-webkit-keyframes gradient-animation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-@-moz-keyframes gradient-animation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-@keyframes gradient-animation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
 }

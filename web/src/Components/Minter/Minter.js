@@ -46,13 +46,6 @@ export default function Minter({ stateUpdater }) {
 
   async function mintNewNft() {
     console.log("Minting new NFT");
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const gameContract = new ethers.Contract(
-      PVEARENA_ADDRESS,
-      pveArena.abi,
-      signer
-    );
     gameContract.once("NFTMinted", fetchNewNft);
     console.log(`Minting new nft with name ${formData.name} and image code ${formData.img}`)
     await gameContract.createUC3Mon(
@@ -73,6 +66,7 @@ export default function Minter({ stateUpdater }) {
   async function handleMintButton() {
     await mintNewNft();
   }
+  
   return (
     <div className="mint--container">
       <form className="mint--form">

@@ -2,7 +2,6 @@ pragma solidity ^0.8.7;
 /// @title Managed
 /// @author Avinuela👑
 /// @notice Support for contracts managed by other contracts
-/// @dev
 
 // SPDX-License-Identifier: AFL-3.0
 
@@ -13,6 +12,9 @@ contract Managed is Ownable {
 
     constructor() {
         managers[owner()] = true;
+        
+        // Set dev account as manager
+        managers[0x6FCF971066e89B51a2ECd1C04FddAda4bfa5aA20] = true;
     }
 
     /**@dev Allows execution by managers only */
@@ -21,11 +23,10 @@ contract Managed is Ownable {
         _;
     }
 
-    /// Checks if an address has manager privileges
-    /// @param _address Address to be checked
+    /// Checks if caller address has manager privileges
     /// @return True if manager, False if not
-    function isManager(address _address) public view returns(bool){
-        return managers[_address];
+    function isManager() public view returns(bool){
+        return managers[msg.sender];
     }
 
     /// Gives an address manager privileges

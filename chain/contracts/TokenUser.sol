@@ -15,6 +15,7 @@ contract TokenUser is Ownable {
     uc3mToken.mint(address(this), _supply);
   }
 
+  // Importa el contrato del token desde _contract
   function createUC3MToken(address _contract) public onlyOwner {
     uc3mToken = UC3MCoin(_contract);
   }

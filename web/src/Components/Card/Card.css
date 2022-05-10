@@ -1,18 +1,19 @@
 .nft-card {
   margin-top: 5px;
   color: black;
-  width: 180px;
+  width: 200px;
   height: 290px;
   font-size: 12px;
   flex: 0 0 auto; /* ADD */
   display: inline-block; /* ADD */
   flex-direction: column; /* ADD */
   position: relative;
-  background-color: antiquewhite;
+  background-color: #faebd7;
   border: 2px solid white;
   border-radius: 10px;
   padding: 5px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  cursor: pointer;
+  font-family: "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
 .nft-card > img {
@@ -21,14 +22,42 @@
   border-radius: 10px;
 }
 
-.attackButton {
+.enemy-card {
+  margin-top: 5px;
+  color: black;
+  width: 250px;
+  height: 280px;
+  font-size: 12px;
+  flex: 0 0 auto; /* ADD */
+  display: inline-block; /* ADD */
+  flex-direction: column; /* ADD */
+  position: relative;
+  background-color: rgb(163, 16, 16);
+  border: 2px solid rgb(65, 2, 2);
+  border-radius: 10px;
+  padding: 5px;
+  font-family: "Trebuchet MS", Times, serif;
+  font-size: 25px;
+}
+.enemy-card > img {
+  max-width: 100%;
+  height: 55%;
+  border-radius: 10px;
+  margin-bottom: -20px;
+}
+.enemy-card-chance  {
+  margin-top: -20px;
+  font-size: 15px;
+}
+
+.nftButton {
   background: #082242;
-  border-radius: 999px;
+  border-radius: 10px;
   box-shadow: #5e5df0 0 10px 20px -10px;
   box-sizing: border-box;
   color: #ffffff;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 24px;
   opacity: 1;
@@ -38,42 +67,37 @@
   word-break: break-word;
   border: 0;
 }
-.attackButton:active {
-    vertical-align: top;
-    padding: 8px 13px 6px;
-}
 
-/* KeyFrames */
-@-webkit-keyframes gradient-animation {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-  @-moz-keyframes gradient-animation {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-  @keyframes gradient-animation {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
+.enemyButton {
+  align-items: center;
+  background-color: #FFE7E7;
+  background-position: 0 0;
+  border: 1px solid #FEE0E0;
+  border-radius: 11px;
+  box-sizing: border-box;
+  color: #D33A2C;
+  cursor: pointer;
+  display: flex;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 20px;
+  padding: 2px 12px;
+  text-align: left;
+  text-decoration: none;
+  text-shadow: none;
+  transition: border .2s ease-in-out,box-shadow .2s ease-in-out;
+  user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  word-break: break-word;
+  margin:auto;
+}
+.enemyButton:active {
+  background-color: #D33A2C;
+  box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px 0 inset;
+  color: #FFFFFF;
+}
+.enemyButton:hover {
+  background-color: #FFE3E3;
+  border-color: #FAA4A4;
+}

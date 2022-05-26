@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ethers } from 'ethers'
 import './App.css'
-import twitterLogo from './assets/twitter-logo.svg'
 import Minter from './Components/Minter/Minter'
 import { NFTCard, EnemyCard } from './Components/Card/Card'
 import {

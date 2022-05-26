@@ -4,7 +4,7 @@ pragma solidity ^0.8.7;
 /// @notice Randomizator using Chainlink. From https://docs.chain.link/docs/intermediates-tutorial/
 /// @dev VRFConsumerBase contract at https://github.com/daiquilibrium/daiquilibrium-protocol/blob/master/protocol/contracts/lottery/chainlink/VRFConsumerBase.sol
 
-// SPDX-License-Identifier: AFL-3.0
+// SPDX-License-Identifier: CC-BY-NC-ND-2.5
 
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -19,13 +19,13 @@ contract RandomNumberConsumer is VRFConsumerBase, Ownable{
     mapping(bytes32 => address) private s_rollers;
     mapping(address => uint256) private s_results;
 
+    /// These values comes from constructor in PVEArena
     //address vrfCoordinator = 0x3d2341ADb2D31f1c5530cDC622016af293177AE0;
     //address link = 0xb0897686c545045aFc77CF20eC7A532E3120E0F1;
 
     // Events
     event DiceRolled(bytes32 indexed requestId, address indexed roller);
-    event DiceLanded(bytes32 indexed requestId, uint256 indexed result);
-    event FightResolved(uint256 indexed monId, uint256 indexed enemyId);
+    event ResultReceived(bytes32 indexed requestId, uint256 indexed result);
 
     /**
      * Constructor inherits VRFConsumerBase
@@ -60,7 +60,7 @@ contract RandomNumberConsumer is VRFConsumerBase, Ownable{
     /// Roll dice. This function makes the necessary calls to Chainlink VRF
     /// @param _roller Address of monster owner, the address making the call for a random number
     /// @param _maxRoll Max number allowed to roll
-    function rollDice(address _roller, uint32 _maxRoll) internal onlyOwner returns (bytes32 requestId){
+    function rollDice(address _roller, uint32 _maxRoll) internal returns (bytes32 requestId){
         require(s_results[_roller]!= ROLL_IN_PROGRESS, "Wait for your other Mons to finish fighting");
         console.log("RNG Contract address",address(this));
         // Checking LINK balance
@@ -83,8 +83,8 @@ contract RandomNumberConsumer is VRFConsumerBase, Ownable{
         uint256 d100Value = (randomness % max_roll[requestId]) + 1; // +1 so s_results[player] can be 0 if no dice has been rolled
         // Assign the transformed value to the address in the s_results mapping variable.
         s_results[s_rollers[requestId]] = d100Value;
-        // Emit a DiceLanded event.
-        emit DiceLanded(requestId, d100Value);
+        // Emit a ResultReceived event.
+        emit ResultReceived(requestId, d100Value);
     }
 
     /// Determines whether the player wins or lose the battle against a PVE enemy, based on a fixed chance (0-100)
@@ -112,9 +112,4 @@ contract RandomNumberConsumer is VRFConsumerBase, Ownable{
           return 0;
         }
     }
-
-  /// Check if fight is over. If returned value is not 0 or 2500, the fight is over
-  function getResult() public view returns (uint result){
-    return s_results[msg.sender];
-  }
 }

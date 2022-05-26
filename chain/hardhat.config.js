@@ -1,4 +1,5 @@
-require("@nomiclabs/hardhat-waffle");
+require('@nomiclabs/hardhat-waffle');
+require('dotenv').config();
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -28,8 +29,8 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   },
   networks: {
     rinkeby: {
-      url: 'https://eth-rinkeby.alchemyapi.io/v2/iwV_hHnxNPNYKkkAqaDiHBlWM-G7AYka',
-      accounts: ['ac8683460459916bf2d979f0ca510e8262dd8bb0f266c9cc5cc3ee9e35888e76']
+      url: process.env.ALCHEMY_URL,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : []
     }
   }
 };

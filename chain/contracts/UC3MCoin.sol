@@ -4,13 +4,13 @@ pragma solidity ^0.8.7;
 /// @notice The place where Token standard ERC20 implementation resides
 /// @dev
 
-// SPDX-License-Identifier: AFL-3.0
+// SPDX-License-Identifier: CC-BY-NC-ND-2.5
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "./utils/Managed.sol";
 
-contract UC3MCoin is ERC20, ERC20Burnable, Managed {
+contract UC3MCoin is ERC20Burnable, Managed {
     constructor() ERC20("UC3MCoin", "UC3M") {}
 
 function decimals() public view virtual override returns (uint8) {

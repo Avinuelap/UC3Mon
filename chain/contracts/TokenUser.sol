@@ -4,28 +4,16 @@ pragma solidity ^0.8.7;
 /// @notice Token interaction
 /// @dev
 
-// SPDX-License-Identifier: AFL-3.0
+// SPDX-License-Identifier: CC-BY-NC-ND-2.5
 
 import "./UC3MCoin.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 contract TokenUser is Ownable {
   UC3MCoin public uc3mToken;
 
-  function initialSupply(uint _supply) public {
-    uc3mToken.mint(address(this), _supply);
-  }
-
   // Importa el contrato del token desde _contract
-  function createUC3MToken(address _contract) public onlyOwner {
+  function importUC3MToken(address _contract) public onlyOwner {
     uc3mToken = UC3MCoin(_contract);
-  }
-
-  function getTokenOwner() public view returns (address) {
-    return uc3mToken.owner();
-  }
-
-  function getMsgSender() public view returns (address) {
-    return msg.sender;
   }
 
   function _rewardPlayer(address _address, uint _reward) internal{

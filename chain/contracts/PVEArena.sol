@@ -4,7 +4,7 @@ pragma solidity ^0.8.7;
 /// @notice The Enemy Battlegrounds
 /// @dev
 
-// SPDX-License-Identifier: AFL-3.0
+// SPDX-License-Identifier: CC-BY-NC-ND-2.5
 
 import "./RandomNumberConsumer.sol";
 import "./Hatchery.sol";
@@ -17,10 +17,10 @@ contract PVEArena is RandomNumberConsumer, Hatchery, TokenUser {
     address _link = 0x01BE23585060835E02B77ef475b0Cc51aA1e0709;
     bytes32 _keyHash =
         0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311;
-    uint256 _fee = 0.1 * 10**18; // 0.1 LINK
+    uint256 _VRFfee = 0.1 * 10**18; // 0.1 LINK
 
     constructor()
-        RandomNumberConsumer(_vrfCoordinator, _link, _keyHash, _fee)
+        RandomNumberConsumer(_vrfCoordinator, _link, _keyHash, _VRFfee)
     {}
 
     // *************************************************************************
@@ -30,7 +30,7 @@ contract PVEArena is RandomNumberConsumer, Hatchery, TokenUser {
         string name;
         string img;
         uint8 chance; // this reflects the victory chance of the mon fighting AGAINST the monster!
-        bool alive;
+        bool isAlive;
     }
     // Storage of existing enemies
     enemy[] public enemies;
@@ -48,6 +48,8 @@ contract PVEArena is RandomNumberConsumer, Hatchery, TokenUser {
     uint32 private constant MAX_PVE_ROLL = 100;
     // EVENTS
     event createdEnemy(uint256 id, string name);
+    event battleWon(uint256 monId, uint256 enemyId);
+    event battleLost(uint256 monId, uint256 enemyId);
 
     // *************************************************************************
     // FUNCTIONS
@@ -59,7 +61,7 @@ contract PVEArena is RandomNumberConsumer, Hatchery, TokenUser {
     /// @dev Random number takes a couple minutes to generate
     function fight(uint256 _monId, uint256 _enemyId) external {
         require(
-            !uc3mons[_monId].fighting,
+            !uc3mons[_monId].isFighting,
             "UC3Mon already engaged in a fight!"
         );
         setFighting(_monId, true);
@@ -72,7 +74,7 @@ contract PVEArena is RandomNumberConsumer, Hatchery, TokenUser {
             enemies[_enemyId].name
         );
         //Only the Mon owner can call this function
-        //require(msg.sender==ownerOf(_monId), "Fight caller must be the NFT owner");
+        require(msg.sender==_player, "Fight caller must be the NFT owner");
         uint8 _chance = enemies[_enemyId].chance;
         console.log("Fight! Victory chance:", _chance, "%");
         rewardEarned[_player] = REWARD_AVAILABLE;
@@ -105,17 +107,18 @@ contract PVEArena is RandomNumberConsumer, Hatchery, TokenUser {
                 uint32(
                     (100 * uc3mons[_monId].level) +
                         ((100 * uc3mons[_monId].level) *
-                            (100 - int32(int8(_chance)))) /
-                        5
+                            (100 - int32(int8(_chance)))) /5           
                 )
             );
             _rewardPlayer(_player, _reward);
 
             _gainExp(_monId, _exp);
+            emit battleWon(_monId, _enemyId);
         } else {
             console.log("Monster wins!");
             // If the player loses, exp gained is reduced by a factor of 10
             _gainExp(_monId, _exp / 10);
+            emit battleLost(_monId, _enemyId);
         }
     }
 
@@ -138,7 +141,7 @@ contract PVEArena is RandomNumberConsumer, Hatchery, TokenUser {
     /// "Kills" an enemy
     /// @param _enemyId Index of the enemy to kill
     function killEnemy(uint _enemyId) public onlyOwner {
-      enemies[_enemyId].alive == false;
+      enemies[_enemyId].isAlive == false;
       numAliveEnemies--;
     }
 
@@ -149,7 +152,7 @@ contract PVEArena is RandomNumberConsumer, Hatchery, TokenUser {
         // Iterate through every monster checking if alive = true
         uint256 counter = 0;
         for (uint256 id = 0; id < enemies.length; id++) {
-            if (enemies[id].alive) {
+            if (enemies[id].isAlive) {
                 aliveEnemies[counter] = id;
                 counter++;
             }
@@ -163,9 +166,13 @@ contract PVEArena is RandomNumberConsumer, Hatchery, TokenUser {
         return enemies[_enemyId];
     }
 
-    // // TEST FUNCTION
+    // // TEST FUNCTIONS
     // function testRewardOnThisAddress() public {
     //   //setUC3MTokenOwner(address(this));
     //   _rewardPlayer(msg.sender, 100);
     // }
+
+    function forceEndFight(uint _monId) public onlyOwner{
+        setFighting(_monId, false);
+    }
 }

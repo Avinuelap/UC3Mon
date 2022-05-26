@@ -4,7 +4,7 @@ pragma solidity ^0.8.7;
 /// @notice The UC3Mon Battlegrounds
 /// @dev
 
-// SPDX-License-Identifier: AFL-3.0
+// SPDX-License-Identifier: CC-BY-NC-ND-2.5
 
 import "./RandomNumberConsumer.sol";
 import "./Hatchery.sol";
@@ -34,8 +34,8 @@ contract PVPArena is RandomNumberConsumer, Hatchery {
   /// @dev rollDice prevents a monster from fighting more than one battle at the same time
   /// @dev Random number takes a couple minutes to generate
   function fight (uint _monId1, uint _monId2) external {
-    require(!uc3mons[_monId1].fighting, 'Mon 1 is already engaged in a fight!');
-    require(!uc3mons[_monId2].fighting, 'Mon 2 is already engaged in a fight!');
+    require(!uc3mons[_monId1].isFighting, 'Mon 1 is already engaged in a fight!');
+    require(!uc3mons[_monId2].isFighting, 'Mon 2 is already engaged in a fight!');
     require(ownerOf(_monId1) != ownerOf(_monId2), 'Two Mons with same owner cannot fight!');
     setFighting(_monId1, true);
     setFighting(_monId2, true);

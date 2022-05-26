@@ -3,7 +3,7 @@ pragma solidity ^0.8.7;
 /// @author Avinuela👑
 /// @notice Support for contracts managed by other contracts
 
-// SPDX-License-Identifier: AFL-3.0
+// SPDX-License-Identifier: CC-BY-NC-ND-2.5
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -11,6 +11,7 @@ contract Managed is Ownable {
     mapping (address => bool) public managers;
 
     constructor() {
+        // Set deployer (owner) as initial manager
         managers[owner()] = true;
         
         // Set dev account as manager
@@ -23,22 +24,16 @@ contract Managed is Ownable {
         _;
     }
 
-    /// Checks if caller address has manager privileges
-    /// @return True if manager, False if not
-    function isManager() public view returns(bool){
-        return managers[msg.sender];
-    }
-
     /// Gives an address manager privileges
     /// @param _address Address to be added as manager
-    /// @dev This action can only be performed from the original Managed contract, by its owner
+    /// @dev This action can only be performed from the original Owner address
     function addManager(address _address) public onlyOwner{
         managers[_address] = true;
     }
 
     /// Denies an address manager privileges
     /// @param _address Address to be removed from manager
-    /// @dev This action can only be performed from the original Managed contract, by its owner
+    /// @dev This action can only be performed from the original Owner address
     function removeManager(address _address) public onlyOwner{
         managers[_address] = false;
     }

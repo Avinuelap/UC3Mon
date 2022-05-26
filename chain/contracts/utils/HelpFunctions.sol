@@ -1,5 +1,5 @@
 pragma solidity ^0.8.7;
-// SPDX-License-Identifier: AFL-3.0  
+// SPDX-License-Identifier: CC-BY-NC-ND-2.5  
 import "./Base64.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 library HelpFunctions {

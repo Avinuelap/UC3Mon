@@ -15,15 +15,18 @@ const main = async () => {
   // // Get the value of the NFT's URI.
   // let returnedTokenUri = await pveArenaContract.tokenURI(0);
   // console.log("Token URI:", returnedTokenUri);
+  
 
-  console.log("Creating enemy Kayn");
-  txn = await pveArenaContract.createEnemy("Kayn", "QmNyMSVmEWpVUhcdAVHguE7PaJSJZ7ATWL99wKjNGBFL5S", 30);
+  
+  console.log("Creating enemy");
+  txn = await pveArenaContract.createEnemy("Terrible Enemy", "QmYS6bAC3bQ4nf4znqBAPCZWwMSwg9FGa6NEtbuWPRPZwq", 80);
   await txn.wait();
   console.log("Created")
 
   console.log("Importing token")
-  txn = await pveArenaContract.createUC3MToken("0x0F42271B3B7cA8695e803cfA3b572d129287A86e");
+  txn = await pveArenaContract.importUC3MToken("0x9BfdF9186B1Faaa3eBf1FfDBEe2d2c0B100D0D9D");
   await txn.wait();
+
 
   // existingEnemies = await pveArenaContract.getExistingEnemiesIds();
   // console.log("Existing enemies: ", existingEnemies);

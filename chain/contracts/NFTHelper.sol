@@ -4,7 +4,7 @@ pragma solidity ^0.8.7;
 /// @notice The place where NFTs ask for help
 /// @dev
 
-// SPDX-License-Identifier: AFL-3.0
+// SPDX-License-Identifier: CC-BY-NC-ND-2.5
 
 import "@openzeppelin/contracts/access/Ownable.sol"; // For ownership control
 
@@ -16,7 +16,7 @@ import "./NFT.sol";
 contract NFTHelper is NFT, Ownable{
     /// Returns list with all UC3Mons owned by an address
     /// @param _owner Address from which to retrieve all owned UC3Mons
-    function getMonsByOwner(address _owner) external view returns(uint[] memory){
+    function getOwnedMons(address _owner) external view returns(uint[] memory){
         //Create a list with size equal to the number of Mons owned by _owner
         uint[] memory result = new uint[](balanceOf(_owner));
         // Iterate through every Mon checking if owner = _owner
@@ -30,6 +30,7 @@ contract NFTHelper is NFT, Ownable{
         return result;
     }
 
+    // If no paramater, use msg.sender
     function getOwnedMons() external view returns(uint[] memory){
         //Create a list with size equal to the number of Mons owned by _owner
         uint[] memory result = new uint[](balanceOf(msg.sender));
@@ -48,13 +49,6 @@ contract NFTHelper is NFT, Ownable{
         return uc3mons[_id];
     }
 
-    /// Change dna of a UC3Mon.
-    /// @param _id Index of UC3Mon in array
-    /// @param _newDna New dna to be assigned
-    /// @dev Only the contract owner can call this function (onlyOwner from Ownable.sol)
-    function changeDna(uint _id, uint _newDna) internal onlyOwner{
-        uc3mons[_id].dna = _newDna;
-    }
     /// Change name of a UC3Mon.
     /// @param _id Index of UC3Mon in array
     /// @param _newName New name to be assigned
@@ -69,11 +63,10 @@ contract NFTHelper is NFT, Ownable{
     /// @param _value True or False (fighting or not fighting)
     function setFighting(uint _id, bool _value) internal {
         //Set fighting to the passed value
-        uc3mons[_id].fighting = _value;
+        uc3mons[_id].isFighting = _value;
     }
 
-
-    /// Gain exp. If 1000 exp is reached, level up
+    /// Gain exp. If 100 exp is reached, level up
     /// @param _id Index of UC3Mon in array
     /// @param _expGained Experience earned
     function _gainExp(uint _id, uint32 _expGained) internal {
@@ -81,9 +74,9 @@ contract NFTHelper is NFT, Ownable{
         //require(msg.sender==ownerOf(_id), "Only Mon owner can make it gain exp!");
         //Gain exp
         uc3mons[_id].exp += _expGained / uint32(uc3mons[_id].level); //Each level requires double the exp from the previous level
-        //If 1000 exp, levelUp and reset exp. Considers 'extra' experience from previous level
-        if (uc3mons[_id].exp >= 1000) {
-            uint32 _extraExp = (uc3mons[_id].exp - 1000) / uint32(uc3mons[_id].level + 1); // Take into account experience halving due to new level
+        //If 100 exp, levelUp and reset exp. Considers 'extra' experience from previous level
+        if (uc3mons[_id].exp >= 100) {
+            uint32 _extraExp = (uc3mons[_id].exp - 100) / uint32(uc3mons[_id].level + 1); // Take into account experience halving due to new level
             _levelUp(_id, _extraExp);
         }
     }
@@ -107,9 +100,7 @@ contract NFTHelper is NFT, Ownable{
                 Strings.toString(_tokenId),
                 '", "description": "This is an NFT that lets people play the UC3Mon Game", "image": "',
                 uc3mons[_tokenId].img,
-                '", "attributes": [ { "trait_type": "DNA", "value": ',
-                Strings.toString(uc3mons[_tokenId].dna),
-                '}, { "trait_type": "Level", "value": ',
+                '", "attributes": [ { "trait_type": "Level", "value": ',
                 Strings.toString(uint32(uc3mons[_tokenId].level)),
                 '}, { "trait_type": "Exp", "value": ',
                 Strings.toString(uc3mons[_tokenId].exp),

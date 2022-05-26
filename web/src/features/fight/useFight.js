@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export const useFight = (gameContract,) => {
     const [monFighting, setMonFighting] = useState(null) //Index of the mon fighting

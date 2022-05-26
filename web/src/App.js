@@ -56,19 +56,6 @@ const App = () => {
         }
     }
 
-    const fetchEnemyData = async () => {
-        console.log('Fetching enemy data')
-        if (!arenaContract) return
-        const existingEnemies = await arenaContract.getExistingEnemiesIds()
-        //console.log(`Existing enemies ids: ${existingEnemies}`)
-
-        // Fetch all existing enemies' data
-        const allInfo = existingEnemies.map((_, i) =>
-            arenaContract.getEnemyInfo(i)
-        )
-        const res = await Promise.all(allInfo)
-        setEnemies(res.map((data) => transformEnemyData(data)))
-    }
 
 
     const startFight = async (enemyId) => {
@@ -160,6 +147,7 @@ const App = () => {
     }
 
     ////////////////////////////////////
+    /*
     // TEST. TO BE REMOVED
     async function handleEndFightButton() {
         console.log('Mon fighting: ', isMonFighting)
@@ -174,6 +162,7 @@ const App = () => {
         await arenaContract.forceEndFight(0)
         console.log('Ended')
     }
+    */
     ///////////////////////////////////
 
     const connectWalletAction = async () => {
@@ -209,14 +198,25 @@ const App = () => {
 
     useEffect(() => {
         if (!arenaContract || !currentAccount) return;
+        const fetchEnemyData = async () => {
+            console.log('Fetching enemy data')
+            if (!arenaContract) return
+            const existingEnemies = await arenaContract.getExistingEnemiesIds()
+            //console.log(`Existing enemies ids: ${existingEnemies}`)
+    
+            // Fetch all existing enemies' data
+            const allInfo = existingEnemies.map((_, i) =>
+                arenaContract.getEnemyInfo(i)
+            )
+            const res = await Promise.all(allInfo)
+            setEnemies(res.map((data) => transformEnemyData(data)))
+        }
         fetchEnemyData()
     }, [arenaContract, currentAccount])
 
     /* Initial useEffect for NFT data gathering*/
     useEffect(() => {
-        /*
-         * The function we will call that interacts with our smart contract
-         */
+        if (!currentAccount) return;
         const fetchNFTMetadata = async () => {
             //console.log("Fetching NFT data");
 
@@ -227,12 +227,7 @@ const App = () => {
             const res = await Promise.all(allInfo)
             setCharacterNFTs(res.map((data) => transformCharacterData(data)))
         }
-        /*
-         * We only want to run this if we have a connected wallet
-         */
-        if (currentAccount) {
-            fetchNFTMetadata()
-        }
+        fetchNFTMetadata()
     }, [arenaContract, currentAccount])
 
     return (

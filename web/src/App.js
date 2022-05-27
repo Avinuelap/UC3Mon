@@ -122,7 +122,7 @@ const App = () => {
                     { <button onClick={handleEndFightButton}>
                         End fight of nft 0
                     </button> }
-                    <LoadingIndicator></LoadingIndicator>
+                    {/* //<LoadingIndicator></LoadingIndicator> */}
 
                     <section className="nfts-list">
                         {characterNFTs &&
@@ -238,7 +238,7 @@ const App = () => {
             <div className="container">
                 <div className="header-container">
                     <p className="header gradient-text">👾 UC3Mon 👾</p>
-                    <p className="sub-text">Go catch em on!</p>
+                    <p className="sub-text">Remember to use Rinkeby!</p>
                 </div>
                 <div className="connect-wallet-container">
                     {renderContent()}

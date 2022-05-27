@@ -37,7 +37,7 @@ const App = () => {
             const { ethereum } = window
 
             if (!ethereum) {
-                console.log('Make sure you have MetaMask!')
+                alert('Get Metamask!')
                 return
             } else {
                 const accounts = await ethereum.request({
@@ -56,8 +56,6 @@ const App = () => {
             console.log(error)
         }
     }
-
-
 
     const startFight = async (enemyId) => {
         if (selectedNFT >= 0) {
@@ -119,9 +117,11 @@ const App = () => {
                             })}
                     </section>
                     {isMonFighting && <button>Fighting...</button>}
-                    { <button onClick={handleEndFightButton}>
-                        End fight of nft 0
-                    </button> }
+                    {
+                        <button onClick={handleEndFightButton}>
+                            End fight of nft 0
+                        </button>
+                    }
                     {/* //<LoadingIndicator></LoadingIndicator> */}
 
                     <section className="nfts-list">
@@ -142,14 +142,17 @@ const App = () => {
                                 )
                             })}
                     </section>
-                    <Minter numOwnedNFTs={characterNFTs.length} stateUpdater={addCharacterNFT} />
+                    <Minter
+                        numOwnedNFTs={characterNFTs.length}
+                        stateUpdater={addCharacterNFT}
+                    />
                 </div>
             )
         }
     }
 
     ////////////////////////////////////
-    
+
     // TEST. TO BE REMOVED
     async function handleEndFightButton() {
         console.log('Mon fighting: ', isMonFighting)
@@ -164,7 +167,7 @@ const App = () => {
         await arenaContract.forceEndFight(0)
         console.log('Ended')
     }
-    
+
     ///////////////////////////////////
 
     const connectWalletAction = async () => {
@@ -199,13 +202,13 @@ const App = () => {
     }, [])
 
     useEffect(() => {
-        if (!arenaContract || !currentAccount) return;
+        if (!arenaContract || !currentAccount) return
         const fetchEnemyData = async () => {
             console.log('Fetching enemy data')
             if (!arenaContract) return
             const existingEnemies = await arenaContract.getExistingEnemiesIds()
             //console.log(`Existing enemies ids: ${existingEnemies}`)
-    
+
             // Fetch all existing enemies' data
             const allInfo = existingEnemies.map((_, i) =>
                 arenaContract.getEnemyInfo(i)
@@ -214,12 +217,12 @@ const App = () => {
             setEnemies(res.map((data) => transformEnemyData(data)))
         }
         fetchEnemyData()
-        console.log("Fetched enemies")
+        console.log('Fetched enemies')
     }, [arenaContract, currentAccount])
 
     /* Initial useEffect for NFT data gathering*/
     useEffect(() => {
-        if (!currentAccount) return;
+        if (!currentAccount) return
         const fetchNFTMetadata = async () => {
             //console.log("Fetching NFT data");
 

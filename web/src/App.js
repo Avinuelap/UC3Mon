@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './App.css'
 import Minter from './Components/Minter/Minter'
 import { NFTCard, EnemyCard } from './Components/Card/Card'
+import LoadingIndicator from './Components/LoadingIndicator'
 import {
     PVEARENA_ADDRESS,
     transformCharacterData,
@@ -121,6 +122,7 @@ const App = () => {
                     { <button onClick={handleEndFightButton}>
                         End fight of nft 0
                     </button> }
+                    <LoadingIndicator></LoadingIndicator>
 
                     <section className="nfts-list">
                         {characterNFTs &&

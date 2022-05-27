@@ -118,9 +118,9 @@ const App = () => {
                             })}
                     </section>
                     {isMonFighting && <button>Fighting...</button>}
-                    {/* <button onClick={handleEndFightButton}>
+                    { <button onClick={handleEndFightButton}>
                         End fight of nft 0
-                    </button> */}
+                    </button> }
 
                     <section className="nfts-list">
                         {characterNFTs &&
@@ -140,14 +140,14 @@ const App = () => {
                                 )
                             })}
                     </section>
-                    <Minter stateUpdater={addCharacterNFT} />
+                    <Minter numOwnedNFTs={characterNFTs.length} stateUpdater={addCharacterNFT} />
                 </div>
             )
         }
     }
 
     ////////////////////////////////////
-    /*
+    
     // TEST. TO BE REMOVED
     async function handleEndFightButton() {
         console.log('Mon fighting: ', isMonFighting)
@@ -162,7 +162,7 @@ const App = () => {
         await arenaContract.forceEndFight(0)
         console.log('Ended')
     }
-    */
+    
     ///////////////////////////////////
 
     const connectWalletAction = async () => {
@@ -212,6 +212,7 @@ const App = () => {
             setEnemies(res.map((data) => transformEnemyData(data)))
         }
         fetchEnemyData()
+        console.log("Fetched enemies")
     }, [arenaContract, currentAccount])
 
     /* Initial useEffect for NFT data gathering*/

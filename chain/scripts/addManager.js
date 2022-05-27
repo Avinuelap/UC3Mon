@@ -7,7 +7,7 @@ const main = async () => {
     );
 
     await deployedTokenContract.addManager(
-        "0x4f1Ab9c7Fb8ecc5e2B28fb9F60cAF18B64E26e19" //Arena address
+        "0x131e4c58c1F110515ffF442069806F0FC6713889" //Arena address
     );
     console.log("Added manager");
   };

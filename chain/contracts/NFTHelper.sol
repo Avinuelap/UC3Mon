@@ -16,7 +16,7 @@ import "./NFT.sol";
 contract NFTHelper is NFT, Ownable{
     /// Returns list with all UC3Mons owned by an address
     /// @param _owner Address from which to retrieve all owned UC3Mons
-    function getOwnedMons(address _owner) external view returns(uint[] memory){
+    function getOwnedMonsByAddress(address _owner) external view returns(uint[] memory){
         //Create a list with size equal to the number of Mons owned by _owner
         uint[] memory result = new uint[](balanceOf(_owner));
         // Iterate through every Mon checking if owner = _owner

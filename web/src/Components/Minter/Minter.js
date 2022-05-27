@@ -4,7 +4,7 @@ import { PVEARENA_ADDRESS, transformCharacterData } from '../../constants'
 import pveArena from '../../utils/PVEArena.json'
 import './Minter.css'
 
-export default function Minter({ stateUpdater }) {
+export default function Minter({ numOwnedNFTs, stateUpdater }) {
     const [gameContract, setGameContract] = useState(null)
     const [formData, setFormData] = useState({ name: '', img: '' })
 
@@ -52,6 +52,19 @@ export default function Minter({ stateUpdater }) {
             await gameContract.createUC3Mon(formData.name, formData.img)
             gameContract.once('NFTMinted', fetchNewNft) // Set listener if nft is minted
         } catch (error) {
+                alert('Only dev!')
+            console.log(error)
+        }
+    }
+
+    async function mintFirstNft() {
+        console.log(
+            `Minting first nft with name ${formData.name} and image code ${formData.img}`
+        )
+        try {
+            await gameContract.createFirstUC3Mon(formData.name, formData.img)
+            gameContract.once('NFTMinted', fetchNewNft) // Set listener if nft is minted
+        } catch (error) {
             console.log(error)
         }
     }
@@ -66,7 +79,13 @@ export default function Minter({ stateUpdater }) {
     }
 
     async function handleMintButton() {
-        await mintNewNft()
+        console.log("Number of owned nfts:", numOwnedNFTs)
+        if (numOwnedNFTs > 0) {
+            await mintNewNft()
+        } else {
+            await mintFirstNft()
+            console.log("Minting first NFT")
+        }
     }
 
     return (
@@ -92,7 +111,9 @@ export default function Minter({ stateUpdater }) {
                 {/* onClick={mintNewNft} */}
             </form>
             <button className="mint--button" onClick={handleMintButton}>
-                MINT NEW NFT (only dev)
+                {numOwnedNFTs > 0
+                    ? 'MINT NEW NFT (only dev)'
+                    : 'MINT STARTING NFT'}
             </button>
         </div>
     )

@@ -10,7 +10,10 @@ import "./NFTHelper.sol";
 
 contract Hatchery is NFTHelper{
     // FUNCTIONS
-
+    function createFirstUC3Mon(string memory _name, string memory _img) public{
+        require(balanceOf(msg.sender)==0);
+        _insertUC3Mon(_name, _img, 1, msg.sender);
+    }
     /// Creation of UC3Mon
     function createUC3Mon(string memory _name, string memory _img) public onlyOwner{
         _insertUC3Mon(_name, _img, 1, msg.sender);

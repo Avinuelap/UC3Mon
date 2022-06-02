@@ -1,16 +1,28 @@
 /* Code found on https://loading.io/css/ */
+.loading-header {
+  color: white;
+  margin-top: -10px;
+  margin-bottom: 0px;
+}
+.loading-footer {
+  color: white;
+  font-size: smaller;
+  margin-top: -5px;
+}
+
 .lds-ring {
   display: inline-block;
   position: relative;
   width: 80px;
-  height: 80px;
+  height: 70px;
+  margin-bottom: -5px;
 }
 .lds-ring div {
   box-sizing: border-box;
   display: block;
   position: absolute;
-  width: 64px;
-  height: 64px;
+  width: 50px;
+  height: 50px;
   margin: 8px;
   border: 8px solid #fff;
   border-radius: 50%;

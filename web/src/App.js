@@ -27,6 +27,12 @@ const App = () => {
         //console.log("Added to state: ", newNFT);
     }
 
+    // function updateCharacterNFT(monId, updatedNFT) {
+    //     let ids = [...characterNFTs.ids]
+    //     ids[monId] = updatedNFT
+    //     setCharacterNFTs({ ids })
+    // }
+
     function modifySelectedNFT(id) {
         setSelectedNFT(id)
     }
@@ -66,7 +72,7 @@ const App = () => {
                 await doFight(selectedNFT, enemyId)
             } catch (error) {
                 console.log(error)
-            }
+            } 
         } else {
             alert('Select an NFT!')
         }
@@ -116,14 +122,8 @@ const App = () => {
                                 )
                             })}
                     </section>
-                    {isMonFighting && <button>Fighting...</button>}
-                    {
-                        <button onClick={handleEndFightButton}>
-                            End fight of nft 0
-                        </button>
-                    }
-                    {/* //<LoadingIndicator></LoadingIndicator> */}
 
+                    {isMonFighting && <LoadingIndicator />}
                     <section className="nfts-list">
                         {characterNFTs &&
                             characterNFTs.map((mon, index) => {
@@ -150,25 +150,6 @@ const App = () => {
             )
         }
     }
-
-    ////////////////////////////////////
-
-    // TEST. TO BE REMOVED
-    async function handleEndFightButton() {
-        console.log('Mon fighting: ', isMonFighting)
-        // try {
-        //     await forceEndFight()
-        // } catch (error) {
-        //     console.log(error)
-        // }
-    }
-    async function forceEndFight() {
-        console.log('Force ending fight')
-        await arenaContract.forceEndFight(0)
-        console.log('Ended')
-    }
-
-    ///////////////////////////////////
 
     const connectWalletAction = async () => {
         try {
@@ -223,6 +204,7 @@ const App = () => {
     /* Initial useEffect for NFT data gathering*/
     useEffect(() => {
         if (!currentAccount) return
+        if (isMonFighting) return
         const fetchNFTMetadata = async () => {
             //console.log("Fetching NFT data");
 
@@ -234,7 +216,7 @@ const App = () => {
             setCharacterNFTs(res.map((data) => transformCharacterData(data)))
         }
         fetchNFTMetadata()
-    }, [arenaContract, currentAccount])
+    }, [arenaContract, currentAccount, isMonFighting])
 
     return (
         <div className="App">

@@ -19,18 +19,20 @@ export const useFight = (gameContract,) => {
     function alertDefeat () {
         alert("You lose!")
         setIsMonFighting(null)
-        gameContract.off("battleWin", alertVictory)
+        gameContract.off("battleWon", alertVictory)
     }
 
-    async function doFight(monId, enemyId) {
+    async function doFight(monId, enemyId, stateUpdater) {
         try {
+            setIsMonFighting(true)
             const fight = await gameContract.fight(monId, enemyId)
             await fight.wait()
-            setIsMonFighting(true)
-            alert("Warning: If you deny the fightResult transaction you wont be able to finish the fight")
             gameContract.once('ResultReceived', handleResult(monId, enemyId))
         } catch (error) {
             console.log(error)
+            setIsMonFighting(null)
+        } finally {
+           
         }
         
     }
